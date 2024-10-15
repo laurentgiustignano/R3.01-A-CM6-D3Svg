@@ -72,7 +72,6 @@ const complementaryColor = (value) => {
   const valeurTexte = ~valeurCercle & 0xFFFFFF;
 
   return colorToString(valeurTexte)
-
 }
 
 /**
@@ -80,7 +79,7 @@ const complementaryColor = (value) => {
  * pour y ajouter le texte par la suite
  */
 svg.selectAll()
-  .data(moyennes, d => d.studentName)
+  .data(moyennes)
   .join('circle')
   .attr('cx', randomX)
   .attr('cy', randomY)
@@ -101,7 +100,7 @@ document.body.append(svg.node())
  * le texte
  */
 svg.selectAll()
-  .data(moyennes, d => d.studentName)
+  .data(moyennes)
   .join('text')
   .text(d => d.studentName)
   .attr('x', (d) => d3.select(`#${d.studentName}`).attr("cx"))
@@ -111,5 +110,3 @@ svg.selectAll()
     return complementaryColor(stringColor)
   })
 
-console.log(colorToString(0x671D5B))
-console.log(colorToString(0x98E2A4))
