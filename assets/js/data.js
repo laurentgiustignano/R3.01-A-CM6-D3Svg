@@ -9,6 +9,8 @@ const moyennes = [
   {studentName: 'Jane', moyenne: 16},
   {studentName: 'Jack', moyenne: 7},
   {studentName: 'Jim', moyenne: 11},
+  {studentName: 'toto', moyenne: 8},
+  {studentName: 'titi', moyenne: 9},
 ]
 
 
@@ -51,7 +53,7 @@ const randomY = () => {
  */
 const randomColor = () => {
   const valeurTexte = Math.floor(Math.random() * (256 ** 3));
-  const valeurCercle = ~valeurTexte  & 0xFFFFFF;
+  const valeurCercle = ~valeurTexte & 0xFFFFFF;
 
   return [
     `#${valeurCercle.toString(16).padStart(6, '0')}`,
@@ -62,34 +64,32 @@ const randomColor = () => {
  * Construction des 'circle' dans le SVG. La référence est conservé
  * pour y ajouter le texte par la suite
  */
-const circles = svg.selectAll()
+svg.selectAll()
   .data(moyennes, d => d.studentName)
   .join('circle')
   .attr('cx', randomX)
   .attr('cy', randomY)
   .attr('r', d => d.moyenne * 2)
   .attr('fill', d => randomColor()[0])
-
-
-/**
- * Ajoute le texte associé à chaque 'circle'. La position d'un cercle est
- * retrouvé grâce à la méthode nodes() et en retrouve les propriétés des
- * coordonnées
- */
-svg.selectAll()
-  .data(moyennes, d => d.studentName)
-  .join('text')
-  .attr('x', (d, i) => {
-    return circles.nodes()[i].getAttribute('cx');
-  })
-  .attr('y', (d, i) => {
-    return circles.nodes()[i].getAttribute('cy') - 10;
-  })
-  .text(d => d.studentName)
-  .attr('fill', d => randomColor()[1])
-
+  .attr('id', d => d.studentName)
 
 /**
  * Ajout dans le DOM du SVG construit
  */
 document.body.append(svg.node())
+
+
+/**
+ * Ajoute le texte associé à chaque 'circle'. La position d'un cercle est
+ * retrouvé grâce à la méthode avec un selecteur sur id. Ne fonctionne que si le SVG
+ * est déjà dans le DOM. On retrouve les coordonnées des cercles pour fixe
+ * le texte
+ */
+svg.selectAll()
+  .data(moyennes, d => d.studentName)
+  .join('text')
+  .text(d => d.studentName)
+  .attr('x', (d) => d3.select(`#${d.studentName}`).attr("cx"))
+  .attr('y', (d) => d3.select(`#${d.studentName}`).attr("cy"))
+  .attr('fill', d => randomColor()[1])
+
