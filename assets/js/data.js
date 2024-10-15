@@ -45,17 +45,34 @@ const randomY = () => {
 };
 
 /**
- * Génère deux couleurs aléatoires et complémentaires pour
- * le texte et le cercle
- * @return {string[]}
+ * Génère une couleur aléatoire pour le cercle
+ * @return {string}
  */
 const randomColor = () => {
-  const valeurTexte = Math.floor(Math.random() * (256 ** 3));
-  const valeurCercle = ~valeurTexte & 0xFFFFFF;
+  const valeurCercle = Math.floor(Math.random() * (256 ** 3));
 
-  return [
-    `#${valeurCercle.toString(16).padStart(6, '0')}`,
-    `#${valeurTexte.toString(16).padStart(6, '0')}`]
+  return colorToString(valeurCercle)
+}
+
+/**
+ * Retourne une couleur au format #1A2B3C à partir d'une valeur décimale
+ * @param {number}value
+ * @return {`#${string}`}
+ */
+const colorToString = (value) => {
+  return `#${value.toString(16).padStart(6, '0')}`
+}
+
+/**
+ * Trouve la couleur complémentaire de value
+ * @param {string}value Couleur au format #1A2B3C
+ */
+const complementaryColor = (value) => {
+  const valeurCercle =  parseInt(value.replace('#', ''), 16);
+  const valeurTexte = ~valeurCercle & 0xFFFFFF;
+
+  return colorToString(valeurTexte)
+
 }
 
 /**
@@ -68,7 +85,7 @@ svg.selectAll()
   .attr('cx', randomX)
   .attr('cy', randomY)
   .attr('r', d => d.moyenne * 2)
-  .attr('fill', () => randomColor()[0])
+  .attr('fill', () => randomColor())
   .attr('id', d => d.studentName)
 
 /**
@@ -89,5 +106,10 @@ svg.selectAll()
   .text(d => d.studentName)
   .attr('x', (d) => d3.select(`#${d.studentName}`).attr("cx"))
   .attr('y', (d) => d3.select(`#${d.studentName}`).attr("cy"))
-  .attr('fill', () => randomColor()[1])
+  .attr('fill', (d) => {
+    const stringColor = d3.select(`#${d.studentName}`).attr("fill")
+    return complementaryColor(stringColor)
+  })
 
+console.log(colorToString(0x671D5B))
+console.log(colorToString(0x98E2A4))
