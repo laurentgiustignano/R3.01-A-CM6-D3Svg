@@ -9,8 +9,6 @@ const moyennes = [
   {studentName: 'Jane', moyenne: 16},
   {studentName: 'Jack', moyenne: 7},
   {studentName: 'Jim', moyenne: 11},
-  {studentName: 'toto', moyenne: 8},
-  {studentName: 'titi', moyenne: 9},
 ]
 
 
@@ -47,7 +45,7 @@ const randomY = () => {
 };
 
 /**
- * Génère deux couleurs aléatoires et complémentaire pour
+ * Génère deux couleurs aléatoires et complémentaires pour
  * le texte et le cercle
  * @return {string[]}
  */
@@ -70,7 +68,7 @@ svg.selectAll()
   .attr('cx', randomX)
   .attr('cy', randomY)
   .attr('r', d => d.moyenne * 2)
-  .attr('fill', d => randomColor()[0])
+  .attr('fill', () => randomColor()[0])
   .attr('id', d => d.studentName)
 
 /**
@@ -91,5 +89,5 @@ svg.selectAll()
   .text(d => d.studentName)
   .attr('x', (d) => d3.select(`#${d.studentName}`).attr("cx"))
   .attr('y', (d) => d3.select(`#${d.studentName}`).attr("cy"))
-  .attr('fill', d => randomColor()[1])
+  .attr('fill', () => randomColor()[1])
 
